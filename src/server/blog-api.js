@@ -11,9 +11,9 @@ router.post('/regist', (req, res)=> {
 
     newUser.save((err, result)=> {
         if (err) {
-            console.log(err);
+            res.json({status: 'err'});
         }
-        res.json(result);
+        res.json({status: "ok"});
     });
 });
 

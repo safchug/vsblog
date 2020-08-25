@@ -3,16 +3,17 @@ import Menu from "../Menu";
 import {Name, Surname, Login, Email, Password} from "./FormComponents";
 
 class Registration extends React.Component {
-    constructor({location}) {
+    constructor({history}) {
         super();
-        this.location = location;
+        this.history = history;
 
         this.state = {
             name: "",
             surname: "",
             login: "",
             email: "",
-            password: ""
+            password: "",
+            postForm: false
         };
 
         this.onNameChange = this.onNameChange.bind(this);
@@ -58,7 +59,9 @@ class Registration extends React.Component {
         }).then((response)=>{
             return response.json();
         }).then((result)=>{
-            alert(result);
+            if(result.status == "ok") {
+                this.setState({postForm: true});
+            }
         })
     }
 
@@ -72,6 +75,7 @@ class Registration extends React.Component {
                 <Menu isLogined={false} fullName="unknown"/>
                 <div className="container border">
                     <form onSubmit={this.submit} action="/#">
+                        {(!this.state.postForm)? (
                         <div className="container border">
 
                             <Name value={this.state.name} onChange={this.onNameChange}/>
@@ -84,7 +88,11 @@ class Registration extends React.Component {
                                 <br/>
                                 <button type="submit" className="btn btn-primary">Sighn in</button>
                             </div>
-                        </div>
+                        </div>)
+                            :
+                                (<h1>You`ve been registrated sussessfully use your login and pasword to log in</h1>)
+                            }
+
                     </form>
                 </div>
             </div>
