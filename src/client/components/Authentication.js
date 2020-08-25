@@ -1,10 +1,54 @@
 import React from 'react';
 import Menu from "./Menu";
 
+import {Email, Login, Name, Password, Surname} from "./Registration/FormComponents";
+
 class Authentication extends React.Component {
-    constructor({location}) {
+    constructor({location, history}) {
         super();
         this.location = location;
+        this.history = history;
+
+        this.state = {
+            login: "",
+            password: "",
+            loginMsg: "",
+            passMsg: ""
+        };
+
+        this.onLoginChange = this.onLoginChange.bind(this);
+        this.onPasswordChange = this.onPasswordChange.bind(this);
+        this.submit = this.submit.bind(this);
+
+    }
+
+    onLoginChange(e) {
+        this.setState({login: e.target.value});
+    }
+
+    onPasswordChange(e) {
+        this.setState({password: e.target.value});
+    }
+
+    submit(e) {
+        e.preventDefault();
+        fetch('/api/login', {
+            method: "POST",
+            body: JSON.stringify(this.state),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then((response)=>{
+            return response.json();
+        }).then((data)=>{
+            if(data.status == "ok") {
+                this.history.push('/');
+            } else if (data.status == "bad login") {
+                this.setState({loginMsg: "A user with this login does not exist"});
+            } else if(data.status == "wrong password") {
+                this.setState({passMsg: "Wrong password"});
+            }
+        });
     }
 
     checkWetherUserLogined() {
@@ -12,7 +56,6 @@ class Authentication extends React.Component {
     }
 
     componentWillMount() {
-        alert('componentWillMount');
     }
 
     render() {
@@ -20,23 +63,21 @@ class Authentication extends React.Component {
             <div className="application">
                 <Menu isLogined={false} fullName="unknoun"/>
                 <div className="container border">
-                    <form>
-                        <div className="form-group">
-                            <label htmlFor="exampleInputEmail1">Email address</label>
-                            <input type="email" className="form-control" id="exampleInputEmail1"
-                                   aria-describedby="emailHelp"/>
-                                <small id="emailHelp" className="form-text text-muted">We'll never share your email with
-                                    anyone else.</small>
+                    <form onSubmit={this.submit} action="/#">
+                        <div className="container border">
+
+                            <Login value={this.state.login} onChange={this.onLoginChange}
+                                   message={this.state.loginMsg}
+                            />
+                            <Password value={this.state.password} onChange={this.onPasswordChange}
+                                      message={this.state.passMsg}
+                            />
+
+                            <div className="row justify-content-md-center">
+                                <br/>
+                                <button type="submit" className="btn btn-primary">Log in</button>
+                            </div>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="exampleInputPassword1">Password</label>
-                            <input type="password" className="form-control" id="exampleInputPassword1"/>
-                        </div>
-                        <div className="form-group form-check">
-                            <input type="checkbox" className="form-check-input" id="exampleCheck1"/>
-                                <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
-                        </div>
-                        <button type="submit" className="btn btn-primary">Log in</button>
                     </form>
                 </div>
             </div>

@@ -15,10 +15,10 @@ export default function Menu({isLogined, fullName}) {
                     </li>
                 </ul>) : (
                 <ul className="navbar-nav justify-content-end">
-                    <h1>{fullName}</h1>
+                    <h3>{fullName}</h3>
                     <li className="nav-item">
                         <NavLink to='/logout' className="nav-link" >Log out</NavLink>
-                    </li>)
+                    </li>
                 </ul>)
             }
         </nav>

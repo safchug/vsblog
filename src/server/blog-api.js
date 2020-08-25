@@ -17,9 +17,32 @@ router.post('/regist', (req, res)=> {
     });
 });
 
-router.post('/login', (req, res)=>{
+router.post('/login', async (req, res)=> {
     let {login, password} = req.body;
-    User.login();
+
+    let user = await User.selectUserWithLogin(login);
+
+    if(user) {
+        user.varification(password, user.hash).then((match)=> {
+            if(match) {
+                req.session.user = user;
+                res.json({status: "ok"});
+            } else {
+                res.json({status: "wrong password"});
+            }
+        });
+    } else {
+        res.json({status: "bad login"});
+    }
+});
+
+router.get('/logout', (req, res)=> {
+    req.session.destroy((err)=>{
+        if(err) {
+            res.json({status: err.message});
+        }
+        res.json({status: "ok"});
+    });
 });
 
 router.get('/user', (req, res)=> {

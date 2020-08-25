@@ -63,10 +63,45 @@ class User {
         });
     }
 
-    varification(login, password, cb) {
-        bcrypt.compare(pass, hash, (err, result) => {
-            cb(result);
+    varification(pass, hash) {
+        return new Promise((resolve, reject) => {
+            bcrypt.compare(pass, hash, (err, result) => {
+                if (err) {
+                    reject(err);
+                }
+
+                resolve(result);
+            });
         });
+
+    }
+
+    static selectUserWithLogin(login) {
+        let sql = 'select * from users where login = ?';
+
+        return new Promise((resolve, reject)=> {
+            db.query(sql, [login], (err, result)=>{
+                if(err) {
+                    reject(err);
+                }
+
+                let user = (result.length != 0)? User.createUser(result) : null;
+
+                resolve(user);
+            });
+        })
+
+    }
+
+    static createUser(result) {
+        let user = new User();
+
+        console.log("creating user");
+        for(let key in result[0]) {
+            user[key] = result[0][key];
+        }
+
+        return user;
     }
 }
 

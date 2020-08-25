@@ -21,6 +21,7 @@ const Login = (props)=>
         <div className="col-4">
             <label htmlFor="inputLogin">Login</label>
             <input type="text" value={props.value} onChange={props.onChange} className="form-control" id="inputLogin"/>
+            <label>{props.message}</label>
         </div>
     </div>
 
@@ -37,6 +38,7 @@ const Password = (props)=>
         <div className="col-4">
             <label htmlFor="inputPass">Password</label>
             <input type="password" value={props.value} onChange={props.onChange} className="form-control" id="inputPass"/>
+            <label>{props.message}</label>
         </div>
     </div>
 
