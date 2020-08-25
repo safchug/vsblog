@@ -1,7 +1,7 @@
 # VSBlog
 
 It`s an application that corispond to its name.
-Where two type of users can post their posts edit and delete them
+Where two type of users can post their posts, edit and delete them.
 
 
 #### Users roles

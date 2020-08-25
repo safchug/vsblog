@@ -27,14 +27,16 @@ router.get('/user', (req, res)=> {
     res.json(user);
 });
 
-router.get('/initblog', async (req, res)=> {
+router.get('/initblog', (req, res)=> {
     let user = req.session.user || null;
 
-    let data = await Post.getAllPosts();
+    Post.getAllPosts((err, result)=>{
 
-    let result = {user, data};
+        let response = {user, data:result};
 
-    res.json(result);
+        res.json(response);
+    });
+
 });
 
 router.post('/add', (req, res)=> {

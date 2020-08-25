@@ -10,7 +10,7 @@ import regeneratorRuntime from "regenerator-runtime";
 class Blog extends React.Component {
     constructor(props) {
         super(props);
-        this.state= {isLoading: true, postList: [], menu: {}};
+        this.state= {isLoading: true, postList: [], user: null};
         this.add = this.add.bind(this);
     }
 
@@ -81,18 +81,19 @@ class Blog extends React.Component {
     }
 
     componentWillMount() {
-        fetch('/api/init').then((responce)=> {
+        fetch('/api/initblog').then((responce)=> {
             return responce.json();
-        }).then((list)=> {
-            console.log("list" + list);
-            this.setState({isLoading: false, postList: list});
+        }).then((obj)=> {
+            console.log("obj" + obj.data);
+            this.setState({isLoading: false, postList:obj.data, user: obj.user});
         });
     }
 
     render() {
         return(
             <div className="aplication">
-                <Menu isLogined={false} fullName="unknoun"/>
+                <Menu isLogined={(this.state.user)? true: false}
+                      fullName={this.state.user && this.state.user.name + " " + this.state.user.surname}/>
             <div className="container border">
                 {(this.state.isLoading)? (<p>Loading...</p>)
                     : this.state.postList.map((post, i)=>(
